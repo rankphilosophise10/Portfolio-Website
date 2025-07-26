@@ -1,0 +1,40 @@
+.header {
+  background-color: #003366;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1rem 1rem 1rem;
+  color: #fff;
+
+  &__logo {
+    display: flex;
+    align-items: center;
+
+    &-img {
+      height: 40px;
+      margin-right: 1.75rem;
+    }
+
+    &-text {
+      font-weight: bold;
+      font-size: 1rem;
+    }
+  }
+
+  &__menu {
+    display: flex;
+    list-style: none;
+    gap: .5rem;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__link {
+    color: white;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
