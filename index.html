@@ -18,14 +18,16 @@
     <img src="./src/img/NJC Monogram.png" alt="Logo" class="header__logo-img">
     <span class="header__logo-text">Nathan Clendenin</span>
   </div>
-  <nav class="header__nav">
-    <ul class="header__menu">
-      <li class="header__menu-item"><a href="#skills" class="header__link">Skills</a></li>
-      <li class="header__menu-item"><a href="#latest-projects" class="header__link">Projects</a></li>
-      <li class="header__menu-item"><a href="#resume" class="header__link">Resume</a></li>
-      <li class="header__menu-item"><a href="#contact" class="header__link">Contact</a></li>
-    </ul>
-  </nav>
+<nav class="header__nav">
+  <ul class="header__menu">
+    <li class="header__menu-item"><a href="#skills" class="header__link">Skills</a></li>
+    <li class="header__menu-item"><a href="#latest-projects" class="header__link">Projects</a></li>
+    <li class="header__menu-item"><a href="#resume" class="header__link">Resume</a></li>
+    <li class="header__menu-item">
+      <a href="mailto:nathanieljclendenin@gmail.com" class="header__link">Contact</a>
+    </li>
+  </ul>
+</nav>
 </header>
   <main id="main">
     <section id="bio" class="bio">
@@ -34,10 +36,14 @@
     <div class="bio__content">
       <h1 class="bio__heading">About Me</h1>
       <p class="bio__text">IT Operations Supervisor with 10 years of experience aspiring to be a Front End Developer.</p>
-      <div class="bio__buttons">
-        <button class="button button--primary">Follow Me</button>
-        <button class="button button--secondary">Contact</button>
-      </div>
+<div class="bio__buttons">
+  <a href="https://linkedin.com" target="_blank">
+    <button class="button button--primary">Connect on LinkedIn</button>
+  </a>
+  <a href="mailto:nathanieljclendenin@gmail.com">
+    <button class="button button--secondary">Contact</button>
+  </a>
+</div>
     </div>
   </div>
     </section>
@@ -64,7 +70,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed iaculis efficitur m
     </article>
   </div>
   <div class="projects-button-container">
-  <button class="button--projects">View Projects</button>
+  <a href="#latest-projects">
+    <button class="button--projects">Projects Home</button>
+    </a>
 </div>
 </section>
   </main>
