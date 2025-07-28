@@ -3,7 +3,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 1rem 1rem 1rem;
+  padding: 1rem;
   color: #fff;
 
   &__logo {
@@ -13,12 +13,30 @@
     &-img {
       height: 40px;
       margin-right: 1.75rem;
+      animation: monogram-spin 2s ease-in-out 1; // One full rotation
+      transform-origin: center center; // Spins around its center
     }
 
     &-text {
       font-weight: bold;
       font-size: 1rem;
+      animation: header-name-load 2s ease-in 1;
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      &-img,
+      &-text {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+    @media (max-width: 768px) {
+  .header__logo-img,
+  .header__logo-text {
+    animation: none !important;
+    transition: none !important;
+  }
+}
   }
 
   &__menu {
@@ -37,4 +55,26 @@
       text-decoration: underline;
     }
   }
+
+  @keyframes header-name-load {
+    0%,
+    100% {
+      transform: translate(100%, 50%) scale(1);
+    }
+
+    50% {
+      transform: translate(25%, -50%) scale(1.5);
+    }
+  }
+
+  @keyframes monogram-spin {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
 }
+
