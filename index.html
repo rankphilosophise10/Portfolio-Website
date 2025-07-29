@@ -49,12 +49,8 @@
       <h1 class="bio__heading">About Me</h1>
       <p class="bio__text">IT Operations Supervisor with 10 years of experience aspiring to be a Front End Developer.</p>
 <div class="bio__buttons">
-  <a href="https://linkedin.com" target="_blank">
-    <button class="button button--primary">Connect on LinkedIn</button>
-  </a>
-  <a href="mailto:nathanieljclendenin@gmail.com">
-    <button class="button button--secondary">Contact</button>
-  </a>
+  <a class="button button--primary" href="https://linkedin.com" target="_blank">Connect on LinkedIn</a>
+  <a class="button button--secondary" href="mailto:nathanieljclendenin@gmail.com">Contact</a>
 </div>
     </div>
   </div>
@@ -81,10 +77,15 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed iaculis efficitur m
       <p class="project-card__desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus interdum nisl nec diam mattis auctor. Donec eget ornare arcu. In hac habitasse platea dictumst. Ut.</p>
     </article>
   </div>
-  <div class="projects-button-container">
-  <a href="#latest-projects">
-    <button class="button--projects">Projects Home</button>
-    </a>
+<div class="projects-button-container">
+  <a
+    href="#latest-projects"
+    class="button button--projects"
+    role="button"
+    aria-label="Go to projects section"
+  >
+    Projects Home
+  </a>
 </div>
 </section>
   </main>
@@ -119,11 +120,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed iaculis efficitur m
           </select>
         </label>
       </div>
-      <footer class="modal__footer">
-        <button class="modal__save">Save</button>
-        <button class="modal__reset" type="button">Restore Default Settings</button>
-        <button class="modal__close" aria-label="Close settings">Exit Settings</button>
-      </footer>
+<footer class="modal__footer">
+  <button class="button button--modal-save">Save</button>
+  <button class="button button--modal-reset" type="button">Restore Default Settings</button>
+  <button class="button button--modal-close" aria-label="Close settings">Exit Settings</button>
+</footer>
     </div>
   </div>
   <script src="js/settings.js"></script>

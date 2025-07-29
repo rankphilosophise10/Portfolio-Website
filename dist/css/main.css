@@ -1,16 +1,42 @@
 :root {
+  --transition-speed: 300ms;
+  --font-size: 1rem;
   --bg-color: #ffffff;
   --text-color: #1a1a1a;
-  --header-bg: #003366;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --bg-color: #121212;
     --text-color: #e0e0e0;
-    --header-bg: #1a1a1a;
   }
 }
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-speed: 0ms;
+  }
+}
+body.dark-mode {
+  --bg-color: #121212;
+  --text-color: #e0e0e0;
+}
+
+body.reduced-motion {
+  --transition-speed: 0ms;
+}
+
+body.font-size-small {
+  --font-size: 0.875rem;
+}
+
+body.font-size-medium {
+  --font-size: 1rem;
+}
+
+body.font-size-large {
+  --font-size: 1.25rem;
+}
+
 .hidden {
   display: none;
 }
@@ -340,6 +366,8 @@ p {
   cursor: pointer;
   transition: background-color var(--transition-speed);
   font-family: inherit;
+  font-weight: bold;
+  text-decoration: none;
 }
 .button--primary {
   background-color: #1b8afa;
@@ -350,7 +378,7 @@ p {
   text-decoration: underline;
 }
 .button--secondary {
-  background-color: #f0f0f0;
+  background-color: #bbbaba;
   color: #333;
 }
 .button--secondary:hover {
@@ -358,7 +386,7 @@ p {
   text-decoration: underline;
 }
 .button--projects {
-  background-color: #f0f0f0;
+  background-color: #bbbaba;
   color: #333;
 }
 .button--projects:hover {
@@ -374,7 +402,7 @@ p {
   text-decoration: underline;
 }
 .button--modal-close {
-  background-color: #e9e7e7;
+  background-color: #bbbaba;
   color: black;
 }
 .button--modal-close:hover {
