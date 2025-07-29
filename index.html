@@ -26,6 +26,18 @@
     <li class="header__menu-item">
       <a href="mailto:nathanieljclendenin@gmail.com" class="header__link">Contact</a>
     </li>
+    <li class="header__menu-item">
+      <a
+        href="#"
+        id="settings-btn"
+        class="header__link"
+        role="button"
+        aria-haspopup="dialog"
+        aria-controls="settings-modal"
+      >
+        Settings
+      </a>
+    </li>
   </ul>
 </nav>
 </header>
@@ -79,6 +91,42 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed iaculis efficitur m
   <footer class="footer">
     <p class="footer__text">&copy; Nathaniel J Clendenin 2025</p>
   </footer>
+<!-- Settings Modal -->
+  <div id="settings-modal" class="modal modal--settings" aria-hidden="true" role="dialog" aria-labelledby="settings-title">
+    <div class="modal__overlay"></div>
+    <div class="modal__content">
+      <header class="modal__header">
+        <h2 id="settings-title">Settings</h2>
+      </header>
+      <div class="modal__body">
+        <label>
+          <input type="checkbox" id="dark-mode-toggle" />
+          Dark Mode
+        </label>
+        <label for="reduced-motion-toggle">
+  <span>Reduced Motion</span>
+  <input type="checkbox" id="reduced-motion-toggle" />
+  <p id="motion-warning" class="motion-warning" hidden>
+  ⚠️ Warning! This preference was automatically selected based on your preferred browsing experience. Unchecking this box will enable the full motion experience on our website including animations! Proceed with caution! ⚠️
+</p>
+</label>
+        <label>
+          <span>Font Size</span>
+          <select id="font-size-select">
+            <option value="small">Small</option>
+            <option value="medium" selected>Medium</option>
+            <option value="large">Large</option>
+          </select>
+        </label>
+      </div>
+      <footer class="modal__footer">
+        <button class="modal__save">Save</button>
+        <button class="modal__reset" type="button">Restore Default Settings</button>
+        <button class="modal__close" aria-label="Close settings">Exit Settings</button>
+      </footer>
+    </div>
+  </div>
+  <script src="js/settings.js"></script>
+  <script src="js/main.js"></script>
 </body>
-
 </html>

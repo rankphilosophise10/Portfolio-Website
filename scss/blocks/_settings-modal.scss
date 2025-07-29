@@ -1,0 +1,63 @@
+.modal--settings {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+  z-index: 9999;
+
+  &.is-open {
+    display: flex;
+    flex-direction: column;
+    background-color: #dddcdc;
+    padding: 1rem;
+    border: 2px solid #003366; // Outline the box
+    border-radius: 8px;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.50);
+    width: auto;     // Responsive width
+    max-width: 50%;   // Maximum width for larger screens
+  }
+}
+
+.modal__header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    background-color: #003366;
+    font-weight: bold;
+    color: white;
+    text-align: center; // Center "Settings"
+    margin-bottom: .25rem;
+}
+
+.modal__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 500;
+    gap: 1rem;
+  }
+
+  input[type="checkbox"],
+  select {
+    order: 1;
+    margin: 0;
+    width: auto;
+  }
+}
+
+.modal__footer {
+  display: flex;
+  justify-content: center; // Center Save/Close buttons
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.motion-warning {
+    color: red;
+    font-weight: bold;
+}
