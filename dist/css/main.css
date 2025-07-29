@@ -336,6 +336,28 @@ p {
   margin-top: 0.25rem;
 }
 
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100dvh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 9998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+body.modal-open .modal-overlay {
+  opacity: 0.5;
+  pointer-events: auto;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
 .button {
   padding: 0.5rem 1rem;
   border: none;

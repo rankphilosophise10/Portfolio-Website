@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('settings-modal');
+  const overlay = document.getElementById('modal-overlay'); // ✅ NEW
   const settingsBtn = document.getElementById('settings-btn');
   const closeBtn = document.getElementById('close-modal');
   const saveBtn = document.getElementById('save-settings');
@@ -77,6 +78,18 @@ document.addEventListener('DOMContentLoaded', () => {
     document.documentElement.setAttribute('data-font-size', savedPrefs.font);
   }
 
+  // ✅ MODAL OPEN/CLOSE HELPERS
+  function openModal() {
+    modal?.classList.add('is-open');
+    document.body.classList.add('modal-open');
+    trapFocus(modal);
+  }
+
+  function closeModal() {
+    modal?.classList.remove('is-open');
+    document.body.classList.remove('modal-open');
+  }
+
   // 💾 Save preferences and close modal
   saveBtn?.addEventListener('click', () => {
     const prefs = {};
@@ -93,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     localStorage.setItem('userPreferences', JSON.stringify(prefs));
-    modal?.classList.remove('is-open');
+    closeModal(); // ✅
   });
 
   // 🔄 Reset preferences and close modal
@@ -111,27 +124,23 @@ document.addEventListener('DOMContentLoaded', () => {
       document.documentElement.setAttribute('data-font-size', 'medium');
     }
 
-    modal?.classList.remove('is-open');
+    closeModal(); // ✅
   });
 
   // 📂 Open modal
   settingsBtn?.addEventListener('click', (e) => {
     e.preventDefault();
-    modal?.classList.toggle('is-open');
-    if (modal?.classList.contains('is-open')) {
-      trapFocus(modal);
-    }
+    openModal(); // ✅
   });
 
   // ❌ Close modal
-  closeBtn?.addEventListener('click', () => {
-    modal?.classList.remove('is-open');
-  });
+  closeBtn?.addEventListener('click', closeModal); // ✅
+  overlay?.addEventListener('click', closeModal);  // ✅ overlay click-to-close
 
   // ⌨️ Escape key closes modal
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      modal?.classList.remove('is-open');
+      closeModal(); // ✅
     }
   });
 
@@ -166,11 +175,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
-
-
-
-
-
-
-
-
