@@ -378,13 +378,6 @@ p {
   color: black;
   text-decoration: underline;
 }
-.button--modal-close {
-  background-color: #bbbaba;
-  color: black;
-}
-.button--modal-close:hover {
-  text-decoration: underline;
-}
 .button--modal-reset {
   background-color: #fcaaaa;
   color: black;
