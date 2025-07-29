@@ -61,3 +61,14 @@
     color: red;
     font-weight: bold;
 }
+
+.locked {
+  opacity: 0.6;
+  pointer-events: none;
+}
+.system-preference-message {
+  font-size: 0.85rem;
+  color: #cc0000;
+  font-style: italic;
+  margin-top: 0.25rem;
+}
