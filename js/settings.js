@@ -1,112 +1,180 @@
 // src/js/settings.js
 
-const settingsBtn         = document.getElementById('settings-btn');
-const modal               = document.getElementById('settings-modal');
-const closeBtn            = modal.querySelector('.modal__close');
-const overlay             = modal.querySelector('.modal__overlay');
-const saveBtn             = modal.querySelector('.modal__save');
-const resetButton         = document.querySelector('.modal__reset');
-const checkbox            = document.querySelector('#dark-mode-toggle');
-const fontSelect          = document.querySelector('#font-size-select');
-const reducedMotionToggle = document.querySelector('#reduced-motion-toggle');
-const motionWarning       = document.getElementById('motion-warning');
+// 1. Element references
+const settingsBtn    = document.getElementById('settings-btn');
+const modal          = document.getElementById('settings-modal');
+const overlay        = modal.querySelector('.modal__overlay');
+const closeBtn       = modal.querySelector('.button--modal-close');
+const saveBtn        = modal.querySelector('.button--modal-save');
+const resetBtn       = modal.querySelector('.button--modal-reset');
+
+const darkToggle     = document.getElementById('dark-mode-toggle');
+const motionToggle   = document.getElementById('reduced-motion-toggle');
+const fontSelect     = document.getElementById('font-size-select');
+const motionWarning  = document.getElementById('motion-warning');
 
 let userToggledMotion = false;
+let lastFocusedEl     = null;
 
-// 🧠 Restore saved reduced motion state, if available
-const savedMotion = localStorage.getItem('reducedMotion');
-if (savedMotion) {
-  const shouldReduce = savedMotion === 'enabled';
-  document.body.classList.toggle('reduced-motion', shouldReduce);
-  reducedMotionToggle.checked = shouldReduce;
-  userToggledMotion = true;
+// 2. LocalStorage keys
+const STORAGE_KEYS = {
+  dark:     'pref-dark-mode',
+  motion:   'pref-reduced-motion',
+  fontSize: 'pref-font-size'
+};
 
-  if (motionWarning) {
-    motionWarning.hidden = true;
-  }
-} else {
-  updateMotionPreference(); // fallback auto-detect
+// 3. Load saved preferences (or defaults)
+function loadSettings() {
+  return {
+    dark:     JSON.parse(localStorage.getItem(STORAGE_KEYS.dark))     || false,
+    motion:   JSON.parse(localStorage.getItem(STORAGE_KEYS.motion))   || null,
+    fontSize: localStorage.getItem(STORAGE_KEYS.fontSize)             || 'medium'
+  };
 }
 
-// 🧁 Modal interactions
-function openModal(event) {
-  event.preventDefault();
+// 4. Apply to document
+function applySettings({ dark, motion, fontSize }) {
+  // Dark mode
+  document.body.classList.toggle('dark-mode', dark);
+
+  // Font size via data-attribute on <html>
+  document.documentElement.setAttribute('data-font-size', fontSize);
+
+  // Reduced motion: if null => auto-detect
+  let shouldReduce;
+  if (motion === null) {
+    shouldReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+                || window.innerWidth <= 768;
+  } else {
+    shouldReduce = motion;
+  }
+  document.body.classList.toggle('reduced-motion', shouldReduce);
+  if (motionWarning) motionWarning.hidden = !shouldReduce;
+}
+
+// 5. Populate the form controls inside modal
+function populateForm({ dark, motion, fontSize }) {
+  darkToggle.checked    = dark;
+  fontSelect.value      = fontSize;
+  userToggledMotion     = motion !== null;
+  motionToggle.checked  = motion !== null
+                         ? motion
+                         : window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (motionWarning) motionWarning.hidden = userToggledMotion;
+}
+
+// 6. Persist settings
+function saveSettings({ dark, motion, fontSize }) {
+  localStorage.setItem(STORAGE_KEYS.dark,     JSON.stringify(dark));
+  localStorage.setItem(STORAGE_KEYS.motion,   JSON.stringify(motion));
+  localStorage.setItem(STORAGE_KEYS.fontSize, fontSize);
+}
+
+// 7. Open/Close modal + focus management
+function openModal(e) {
+  e.preventDefault();
+  lastFocusedEl = document.activeElement;
+  populateForm(loadSettings());
+
   modal.classList.add('is-open');
   modal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
+
+  // focus first control
+  darkToggle.focus();
 }
 
 function closeModal() {
   modal.classList.remove('is-open');
   modal.setAttribute('aria-hidden', 'true');
-  settingsBtn.focus();
+  document.body.classList.remove('modal-open');
+
+  // return focus
+  if (lastFocusedEl) lastFocusedEl.focus();
 }
 
+// 8. Event listeners
+
+// Open / Close
 settingsBtn.addEventListener('click', openModal);
 closeBtn.addEventListener('click', closeModal);
 overlay.addEventListener('click', closeModal);
-saveBtn.addEventListener('click', () => {
-  // your save logic here…
-  closeModal();
-});
 
-// 🧹 Reset settings
-resetButton.addEventListener('click', () => {
-  if (confirm('WARNING! This will clear your selected preferences and will set all values back to the system default settings.')) {
-    checkbox.checked = false;
-    fontSelect.value = 'medium';
-    document.body.classList.remove('dark-mode');
-    localStorage.setItem('darkMode', 'disabled');
-
-    // Reset reduced motion preferences
-    document.body.classList.remove('reduced-motion');
-    reducedMotionToggle.checked = false;
-    localStorage.removeItem('reducedMotion');
-    userToggledMotion = false;
-
-    if (motionWarning) {
-      motionWarning.hidden = true;
-    }
-
-    updateMotionPreference(); // re-apply auto preference
+// Escape key to close
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && modal.classList.contains('is-open')) {
     closeModal();
   }
 });
 
-// ⚙️ Manual reduced motion toggle
-reducedMotionToggle.addEventListener('change', () => {
-  userToggledMotion = true;
-  const shouldReduce = reducedMotionToggle.checked;
+// Save
+saveBtn.addEventListener('click', () => {
+  const newPrefs = {
+    dark:     darkToggle.checked,
+    motion:   motionToggle.checked,
+    fontSize: fontSelect.value
+  };
+  applySettings(newPrefs);
+  saveSettings(newPrefs);
+  closeModal();
 
-  document.body.classList.toggle('reduced-motion', shouldReduce);
-  localStorage.setItem('reducedMotion', shouldReduce ? 'enabled' : 'disabled');
-
-  if (motionWarning) {
-    motionWarning.hidden = true;
-  }
+  // inside your saveBtn listener
+saveBtn.addEventListener('click', () => {
+  console.log('💬 Save clicked – fontSelect.value =', fontSelect.value);
+  const newPrefs = {
+    dark:     darkToggle.checked,
+    motion:   motionToggle.checked,
+    fontSize: fontSelect.value
+  };
+  applySettings(newPrefs);
+  saveSettings(newPrefs);
+  closeModal();
+});
 });
 
-// 🌍 Auto-detect screen size + system preference
-function updateMotionPreference() {
-  if (userToggledMotion) return;
+// Reset to system default
+resetBtn.addEventListener('click', () => {
+  if (!confirm('This will restore system default preferences. Proceed?')) return;
 
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const isSmallScreen = window.innerWidth <= 768;
-  const shouldReduce = prefersReduced || isSmallScreen;
+  const defaults = { dark: false, motion: null, fontSize: 'medium' };
+  applySettings(defaults);
+  populateForm(defaults);
 
-  document.body.classList.toggle('reduced-motion', shouldReduce);
-  reducedMotionToggle.checked = shouldReduce;
-  localStorage.setItem('reducedMotion', shouldReduce ? 'enabled' : 'disabled');
+  Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key));
+  closeModal();
+});
 
-  if (motionWarning) {
-    motionWarning.hidden = !shouldReduce;
-  }
+// Real-time toggles
+darkToggle.addEventListener('change', () => {
+  document.body.classList.toggle('dark-mode', darkToggle.checked);
+});
 
-  // 🧪 Debugging info
-  console.log({ prefersReduced, isSmallScreen, shouldReduce });
-}
+//  ――――― Integrate font-size logic ―――――
 
-// 🖥 React to viewport changes
-window.addEventListener('resize', updateMotionPreference);
+// Apply & persist immediately when user picks a new font-size
+fontSelect.addEventListener('change', () => {
+  const size = fontSelect.value;              // 'small' | 'medium' | 'large'
+  document.documentElement.setAttribute('data-font-size', size);
+  localStorage.setItem(STORAGE_KEYS.fontSize, size);
+});
+
+// Reduced-motion toggle
+motionToggle.addEventListener('change', () => {
+  userToggledMotion = true;
+  document.body.classList.toggle('reduced-motion', motionToggle.checked);
+  if (motionWarning) motionWarning.hidden = true;
+});
+
+// 9. Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+  const prefs = loadSettings();
+
+  // Populate the form (so the <select> shows the right value even before opening)
+  populateForm(prefs);
+
+  // Apply all saved or auto-detected settings
+  applySettings(prefs);
+});
 
 
 

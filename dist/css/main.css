@@ -37,6 +37,12 @@ body.font-size-large {
   --font-size: 1.25rem;
 }
 
+:root {
+  --font-size-small: 0.875rem;
+  --font-size-medium: 1rem;
+  --font-size-large: 1.25rem;
+}
+
 .hidden {
   display: none;
 }
@@ -58,47 +64,6 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-}
-
-.button--primary {
-  background-color: #1b8afa;
-  color: white;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.button--primary:hover {
-  color: black;
-  text-decoration: underline;
-}
-
-.button--secondary {
-  background-color: #f0f0f0;
-  color: #333;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  align-self: center;
-}
-.button--secondary:hover {
-  color: black;
-  text-decoration: underline;
-}
-
-.button--projects {
-  background-color: #f0f0f0;
-  color: #333;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  align-self: center;
-}
-.button--projects:hover {
-  color: black;
-  text-decoration: underline;
 }
 
 .projects-button-container {
@@ -414,4 +379,32 @@ p {
 }
 .button--modal-reset:hover {
   text-decoration: underline;
+}
+
+body {
+  font-size: var(--font-size-medium);
+}
+
+.text-small {
+  font-size: var(--font-size-small);
+}
+
+.text-large {
+  font-size: var(--font-size-large);
+}
+
+html[data-font-size=small] {
+  --font-size-base: var(--font-size-small);
+}
+
+html[data-font-size=medium] {
+  --font-size-base: var(--font-size-medium);
+}
+
+html[data-font-size=large] {
+  --font-size-base: var(--font-size-large);
+}
+
+body {
+  font-size: var(--font-size-base);
 }/*# sourceMappingURL=main.css.map */

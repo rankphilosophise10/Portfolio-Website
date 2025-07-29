@@ -1,0 +1,28 @@
+// _typography.scss
+body {
+  font-size: var(--font-size-medium);
+}
+
+.text-small {
+  font-size: var(--font-size-small);
+}
+.text-large {
+  font-size: var(--font-size-large);
+}
+
+// In _typography.scss or a dedicated _font-size.scss file
+
+html[data-font-size='small'] {
+  --font-size-base: var(--font-size-small);
+}
+html[data-font-size='medium'] {
+  --font-size-base: var(--font-size-medium);
+}
+html[data-font-size='large'] {
+  --font-size-base: var(--font-size-large);
+}
+
+// Apply across the site
+body {
+  font-size: var(--font-size-base);
+}
