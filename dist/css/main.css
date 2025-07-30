@@ -264,22 +264,23 @@ p {
 }
 
 .modal--settings {
+  opacity: 0;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  display: none;
+  visibility: hidden;
   z-index: 9999;
 }
 .modal--settings.is-open {
-  display: flex;
+  opacity: 1;
+  visibility: visible;
   flex-direction: column;
   background-color: #dddcdc;
   padding: 1rem;
   border: 2px solid #003366;
   border-radius: 8px;
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
-  width: auto;
   max-width: 60%;
 }
 
@@ -350,12 +351,17 @@ p {
 }
 
 body.modal-open .modal-overlay {
-  opacity: 0.5;
+  opacity: 1;
   pointer-events: auto;
 }
 
 body.modal-open {
   overflow: hidden;
+}
+
+body.modal-open #main {
+  filter: blur(4px) brightness(1.1);
+  pointer-events: none;
 }
 
 .button {
