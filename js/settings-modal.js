@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const summaryMessage = document.createElement('p');
   summaryMessage.className = 'system-preference-message';
   summaryMessage.textContent =
-    "Some settings are being automatically applied based on your system's preferred experience settings or screen size and cannot be overridden here.";
+    "Some settings are being automatically applied based on your designated preferred browsing experience or screen size and cannot be overridden here.";
   summaryMessage.hidden = true;
   document.querySelector('.modal__body')?.appendChild(summaryMessage);
 
