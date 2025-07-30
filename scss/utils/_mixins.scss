@@ -3,3 +3,24 @@
   justify-content: center;
   align-items: center;
 }
+
+@mixin themed-component {
+  background-color: var(--modal-bg);
+  color: var(--text-color);
+  border: 1px solid var(--modal-border);
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+@mixin generate-button-variants($map) {
+  @each $name, $props in $map {
+    .button--#{$name} {
+      background-color: map-get($props, bg);
+      color: map-get($props, text);
+
+      &:hover {
+        color: map-get($props, hover-text);
+        text-decoration: underline;
+      }
+    }
+  }
+}

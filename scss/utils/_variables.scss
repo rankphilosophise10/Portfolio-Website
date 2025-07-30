@@ -1,53 +1,89 @@
 :root {
-  --transition-speed: 300ms;
-  --font-size: 1rem;
-  --bg-color: #ffffff;
-  --text-color: #1a1a1a;
+  --color-surface: #f8f3f3;
+  --color-text-primary: #1a1a1a;
+  --color-modal-surface: #d1cfcf; 
+  --color-border: #ccc;
+  --color-accent: #007acc;
+  --color-button-text: #ffffff;
+  --color-header: #003366;
+  --color-footer: #003366;
+  --color-input-bg: #ffffff; //this is the background of the font size selector box located in the settings modal.
+  --color-warning-text: #ff0000; // this is for the * for the system star in the settings modal.
+
+    // Button colors light mode
+  --color-primary-button-bg: #1b8afa;
+  --color-secondary-button-bg: #bbbaba;
+  --color-save-button-bg: #1b8afa;
+  --color-reset-button-bg: #fcaaaa;
+  --color-button-text: #ffffff;
+  --color-secondary-button-text: #333333;
+  --color-reset-button-text: #000000;
+  --color-button-hover-text: #000000;
+
+  // Typography
+  --font-size-small: 0.875rem;
+  --font-size-medium: 1rem;
+  --font-size-large: 1.25rem;
+  --font-size-base: var(--font-size-medium);
 }
 
-// Fallbacks (media queries)
+html.dark-mode {
+  --color-header: #6d6d6d96;
+  --color-footer: #6d6d6d96;
+  --color-surface: #121212;
+  --color-text-primary: #e0e0e0;
+  --color-modal-surface: #1e1e1e;
+  --color-border: #444;
+  --color-accent: #005a9e;
+  --color-button-text: #eeeeee;
+  --color-input-bg: #818181; //this is the background of the font size selector box located in the settings modal.
+
+   // Button colors light mode
+  --color-primary-button-bg: #005a9e;
+  --color-secondary-button-bg: #555555;
+  --color-save-button-bg: #005a9e;
+  --color-reset-button-bg: #7a3e3e;
+
+  --color-button-text: #eeeeee;
+  --color-secondary-button-text: #dddddd;
+  --color-reset-button-text: #eeeeee;
+  --color-button-hover-text: #ffffff;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-color: #121212;
-    --text-color: #e0e0e0;
+    // Dark theme tokens
+  --color-header: #6d6d6d96;
+  --color-footer: #6d6d6d96;
+  --color-surface: #121212;
+  --color-text-primary: #e0e0e0;
+  --color-modal-surface: #1e1e1e;
+  --color-border: #444;
+  --color-accent: #005a9e;
+  --color-button-text: #eeeeee;
+  --color-input-bg: #818181; //this is the background of the font size selector box located in the settings modal.
+
+   // Button colors light mode
+  --color-primary-button-bg: #005a9e;
+  --color-secondary-button-bg: #555555;
+  --color-save-button-bg: #005a9e;
+  --color-reset-button-bg: #7a3e3e;
+
+  --color-button-text: #eeeeee;
+  --color-secondary-button-text: #dddddd;
+  --color-reset-button-text: #eeeeee;
+  --color-button-hover-text: #ffffff;
+    // etc.
   }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  :root {
-    --transition-speed: 0ms;
-  }
-}
-
-// Overrides by class
-body.dark-mode {
-  --bg-color: #121212;
-  --text-color: #e0e0e0;
-}
-
-body.reduced-motion {
-  --transition-speed: 0ms;
 }
 
 body.font-size-small {
-  --font-size: 0.875rem;
+  --font-size: var(--font-size-small);
 }
-
 body.font-size-medium {
-  --font-size: 1rem;
+  --font-size: var(--font-size-medium);
 }
-
 body.font-size-large {
-  --font-size: 1.25rem;
+  --font-size: var(--font-size-large);
 }
 
-// _variables.scss
-$font-size-small: 0.875rem;
-$font-size-medium: 1rem;
-$font-size-large: 1.25rem;
-
-:root {
-  --font-size-small: #{$font-size-small};
-  --font-size-medium: #{$font-size-medium};
-  --font-size-large: #{$font-size-large};
-}

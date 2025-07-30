@@ -1,46 +1,79 @@
 :root {
-  --transition-speed: 300ms;
-  --font-size: 1rem;
-  --bg-color: #ffffff;
-  --text-color: #1a1a1a;
+  --color-surface: #f8f3f3;
+  --color-text-primary: #1a1a1a;
+  --color-modal-surface: #d1cfcf;
+  --color-border: #ccc;
+  --color-accent: #007acc;
+  --color-button-text: #ffffff;
+  --color-header: #003366;
+  --color-footer: #003366;
+  --color-input-bg: #ffffff;
+  --color-warning-text: #ff0000;
+  --color-primary-button-bg: #1b8afa;
+  --color-secondary-button-bg: #bbbaba;
+  --color-save-button-bg: #1b8afa;
+  --color-reset-button-bg: #fcaaaa;
+  --color-button-text: #ffffff;
+  --color-secondary-button-text: #333333;
+  --color-reset-button-text: #000000;
+  --color-button-hover-text: #000000;
+  --font-size-small: 0.875rem;
+  --font-size-medium: 1rem;
+  --font-size-large: 1.25rem;
+  --font-size-base: var(--font-size-medium);
+}
+
+html.dark-mode {
+  --color-header: #6d6d6d96;
+  --color-footer: #6d6d6d96;
+  --color-surface: #121212;
+  --color-text-primary: #e0e0e0;
+  --color-modal-surface: #1e1e1e;
+  --color-border: #444;
+  --color-accent: #005a9e;
+  --color-button-text: #eeeeee;
+  --color-input-bg: #818181;
+  --color-primary-button-bg: #005a9e;
+  --color-secondary-button-bg: #555555;
+  --color-save-button-bg: #005a9e;
+  --color-reset-button-bg: #7a3e3e;
+  --color-button-text: #eeeeee;
+  --color-secondary-button-text: #dddddd;
+  --color-reset-button-text: #eeeeee;
+  --color-button-hover-text: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-color: #121212;
-    --text-color: #e0e0e0;
+    --color-header: #6d6d6d96;
+    --color-footer: #6d6d6d96;
+    --color-surface: #121212;
+    --color-text-primary: #e0e0e0;
+    --color-modal-surface: #1e1e1e;
+    --color-border: #444;
+    --color-accent: #005a9e;
+    --color-button-text: #eeeeee;
+    --color-input-bg: #818181;
+    --color-primary-button-bg: #005a9e;
+    --color-secondary-button-bg: #555555;
+    --color-save-button-bg: #005a9e;
+    --color-reset-button-bg: #7a3e3e;
+    --color-button-text: #eeeeee;
+    --color-secondary-button-text: #dddddd;
+    --color-reset-button-text: #eeeeee;
+    --color-button-hover-text: #ffffff;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  :root {
-    --transition-speed: 0ms;
-  }
-}
-body.dark-mode {
-  --bg-color: #121212;
-  --text-color: #e0e0e0;
-}
-
-body.reduced-motion {
-  --transition-speed: 0ms;
-}
-
 body.font-size-small {
-  --font-size: 0.875rem;
+  --font-size: var(--font-size-small);
 }
 
 body.font-size-medium {
-  --font-size: 1rem;
+  --font-size: var(--font-size-medium);
 }
 
 body.font-size-large {
-  --font-size: 1.25rem;
-}
-
-:root {
-  --font-size-small: 0.875rem;
-  --font-size-medium: 1rem;
-  --font-size-large: 1.25rem;
+  --font-size: var(--font-size-large);
 }
 
 .hidden {
@@ -55,8 +88,9 @@ body {
   box-sizing: border-box;
   font-family: "Lato", sans-serif;
   line-height: 1.6;
-  background-color: #f9f9f9;
-  color: #333;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: var(--font-size);
   justify-content: center;
 }
 
@@ -81,12 +115,12 @@ p {
 }
 
 .header {
-  background-color: #003366;
+  background-color: var(--color-header);
+  color: var(--color-button-text);
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  color: #fff;
 }
 .header__logo {
   display: flex;
@@ -95,12 +129,12 @@ p {
 .header__logo-img {
   height: 40px;
   margin-right: 1.75rem;
-  animation: monogram-spin 2s ease-in-out 1;
+  animation: monogram-spin 2s ease-in-out infinite;
   transform-origin: center center;
 }
 .header__logo-text {
   font-weight: bold;
-  font-size: 1rem;
+  font-size: var(--font-size-small);
   animation: header-name-load 2s ease-in 1;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -124,7 +158,7 @@ p {
   margin: 0;
 }
 .header__link {
-  color: white;
+  color: var(--color-button-text);
   text-decoration: none;
 }
 .header__link:hover {
@@ -148,8 +182,8 @@ p {
 }
 
 .footer {
-  background-color: #003366;
-  color: white;
+  background-color: var(--color-footer);
+  color: var(--color-button-text);
   text-align: center;
   padding: 1rem;
 }
@@ -200,33 +234,6 @@ p {
   justify-content: center;
 }
 
-.buttons {
-  display: flex;
-  gap: 1rem;
-}
-.buttons__primary {
-  background-color: #003366;
-  color: white;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.buttons__primary:hover {
-  background-color: #002244;
-}
-.buttons__secondary {
-  background-color: #f0f0f0;
-  color: #333;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.buttons__secondary:hover {
-  background-color: #e0e0e0;
-}
-
 .latest-projects {
   padding: 2rem;
 }
@@ -264,6 +271,10 @@ p {
 }
 
 .modal--settings {
+  background-color: var(--modal-bg);
+  color: var(--text-color);
+  border: 1px solid var(--modal-border);
+  transition: background-color var(--transition-speed), color var(--transition-speed);
   opacity: 0;
   position: fixed;
   top: 50%;
@@ -276,9 +287,9 @@ p {
   opacity: 1;
   visibility: visible;
   flex-direction: column;
-  background-color: #dddcdc;
+  background-color: var(--color-modal-surface);
   padding: 1rem;
-  border: 2px solid #003366;
+  border: 2px solid var(--color-border);
   border-radius: 8px;
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
   max-width: 60%;
@@ -286,10 +297,10 @@ p {
 
 .modal__header h2 {
   margin: 0;
-  font-size: 1.5rem;
-  background-color: #003366;
+  font-size: var(--font-size-large);
+  background-color: var(--color-header);
   font-weight: bold;
-  color: white;
+  color: var(--color-button-text);
   text-align: center;
   margin-bottom: 0.5rem;
 }
@@ -311,7 +322,7 @@ p {
   align-items: center;
 }
 .modal__body label .label-text .system-star {
-  color: red;
+  color: var(--color-warning-text);
   font-weight: bold;
   margin-right: 0.25rem;
 }
@@ -320,11 +331,11 @@ p {
   position: absolute;
   top: 100%;
   left: 0;
-  background: #fff;
-  color: #333;
-  font-size: 0.75rem;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-small);
   padding: 0.25rem 0.5rem;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-border);
   opacity: 0;
   pointer-events: none;
   white-space: nowrap;
@@ -364,13 +375,13 @@ p {
 }
 
 .motion-warning {
-  color: red;
+  color: var(--color-warning-text);
   font-weight: bold;
 }
 
 .system-preference-message {
-  font-size: 0.85rem;
-  color: #cc0000;
+  font-size: var(--font-size-small);
+  color: var(--color-system-message);
   font-style: italic;
   margin-top: 0.25rem;
 }
@@ -381,11 +392,11 @@ p {
   left: 0;
   height: 100dvh;
   width: 100vw;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: var(--color-overlay-bg);
   z-index: 9998;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--transition-speed, 0.3s) ease;
 }
 
 body.modal-open .modal-overlay {
@@ -404,11 +415,11 @@ body.modal-open #main {
 
 #font-size-select {
   padding: 0.5rem 0.75rem;
-  background-color: #f2f2f2;
-  color: #333;
-  border: 1px solid #999;
+  background-color: var(--color-input-bg);
+  color: var(--color-input-text);
+  border: 1px solid var(--color-input-border);
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: var(--font-size-base);
   font-weight: 500;
   -webkit-appearance: none;
      -moz-appearance: none;
@@ -426,42 +437,35 @@ body.modal-open #main {
   text-decoration: none;
 }
 .button--primary {
-  background-color: #1b8afa;
-  color: white;
+  background-color: var(--color-primary-button-bg);
+  color: var(--color-button-text);
 }
 .button--primary:hover {
-  color: black;
+  color: var(--color-button-hover-text);
   text-decoration: underline;
 }
-.button--secondary {
-  background-color: #bbbaba;
-  color: #333;
+.button--secondary, .button--projects {
+  background-color: var(--color-secondary-button-bg);
+  color: var(--color-secondary-button-text);
 }
-.button--secondary:hover {
-  color: black;
-  text-decoration: underline;
-}
-.button--projects {
-  background-color: #bbbaba;
-  color: #333;
-}
-.button--projects:hover {
-  color: black;
+.button--secondary:hover, .button--projects:hover {
+  color: var(--color-button-hover-text);
   text-decoration: underline;
 }
 .button--modal-save {
-  background-color: #1b8afa;
-  color: white;
+  background-color: var(--color-save-button-bg);
+  color: var(--color-button-text);
 }
 .button--modal-save:hover {
-  color: black;
+  color: var(--color-button-hover-text);
   text-decoration: underline;
 }
 .button--modal-reset {
-  background-color: #fcaaaa;
-  color: black;
+  background-color: var(--color-reset-button-bg);
+  color: var(--color-reset-button-text);
 }
 .button--modal-reset:hover {
+  color: var(--color-button-hover-text);
   text-decoration: underline;
 }
 

@@ -1,10 +1,11 @@
 .header {
-  background-color: #003366;
+  background-color: var(--color-header); // previously #003366
+  color: var(--color-button-text);       // previously #fff
+
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  color: #fff;
 
   &__logo {
     display: flex;
@@ -13,13 +14,13 @@
     &-img {
       height: 40px;
       margin-right: 1.75rem;
-      animation: monogram-spin 2s ease-in-out 1; // One full rotation
-      transform-origin: center center; // Spins around its center
+      animation: monogram-spin 2s ease-in-out infinite;
+      transform-origin: center center;
     }
 
     &-text {
       font-weight: bold;
-      font-size: 1rem;
+      font-size: var(--font-size-small); // more scalable than hardcoded 1rem
       animation: header-name-load 2s ease-in 1;
     }
 
@@ -30,25 +31,26 @@
         transition: none !important;
       }
     }
+
     @media (max-width: 768px) {
-  .header__logo-img,
-  .header__logo-text {
-    animation: none !important;
-    transition: none !important;
-  }
-}
+      .header__logo-img,
+      .header__logo-text {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
   }
 
   &__menu {
     display: flex;
     list-style: none;
-    gap: .5rem;
+    gap: 0.5rem;
     padding: 0;
     margin: 0;
   }
 
   &__link {
-    color: white;
+    color: var(--color-button-text); // tokenized version of white
     text-decoration: none;
 
     &:hover {
@@ -57,8 +59,7 @@
   }
 
   @keyframes header-name-load {
-    0%,
-    100% {
+    0%, 100% {
       transform: translate(100%, 50%) scale(1);
     }
 
@@ -71,10 +72,10 @@
     from {
       transform: rotate(0deg);
     }
-
     to {
       transform: rotate(360deg);
     }
   }
 }
+
 

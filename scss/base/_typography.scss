@@ -1,3 +1,6 @@
+// This file is currently being used to control font-size scaling from the Settings Modal.
+
+
 // _typography.scss
 body {
   font-size: var(--font-size-medium);
@@ -26,3 +29,4 @@ html[data-font-size='large'] {
 body {
   font-size: var(--font-size-base);
 }
+
