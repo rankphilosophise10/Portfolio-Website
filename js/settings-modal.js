@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('settings-modal');
-  const overlay = document.getElementById('modal-overlay'); // ✅ NEW
+  const overlay = document.getElementById('modal-overlay');
   const settingsBtn = document.getElementById('settings-btn');
   const closeBtn = document.getElementById('close-modal');
   const saveBtn = document.getElementById('save-settings');
@@ -9,142 +9,142 @@ document.addEventListener('DOMContentLoaded', () => {
   const darkToggle = document.getElementById('dark-mode-toggle');
   const motionToggle = document.getElementById('reduced-motion-toggle');
   const fontSelect = document.getElementById('font-size-select');
-  const motionTooltip = document.getElementById('motion-tooltip');
-
-  const summaryMessage = document.createElement('p');
-  summaryMessage.className = 'system-preference-message';
-  summaryMessage.textContent =
-    "Some settings are being automatically applied based on your designated preferred browsing experience or screen size and cannot be overridden here.";
-  summaryMessage.hidden = true;
-  document.querySelector('.modal__body')?.appendChild(summaryMessage);
 
   let systemPrefCount = 0;
-  const systemLocked = {
-    dark: false,
-    motion: false,
-    font: false,
-  };
+  const systemLocked = { dark: false, motion: false, font: false };
+  let savedPrefs = JSON.parse(localStorage.getItem('userPreferences') || '{}');
+  const isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
 
   function lockControl(control, key) {
-    if (control) {
-      control.checked = true;
-      control.disabled = true;
-      systemLocked[key] = true;
-      systemPrefCount++;
+    if (!control) return;
+    control.checked = true;
+    control.disabled = true;
+    systemLocked[key] = true;
+    systemPrefCount++;
+
+    const labelText = control.closest('label')?.querySelector('.label-text');
+    if (labelText && !labelText.querySelector('.system-star')) {
+      const star = document.createElement('span');
+      star.className = 'system-star';
+      star.textContent = '*';
+      labelText.prepend(star);
     }
   }
 
-  const savedPrefs = JSON.parse(localStorage.getItem('userPreferences') || '{}');
-  const userHasMotionPref = typeof savedPrefs.motion === 'boolean';
-  const isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
+  function refreshSystemSettings() {
+    systemPrefCount = 0;
+    Object.keys(systemLocked).forEach(key => systemLocked[key] = false);
 
-  if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    lockControl(darkToggle, 'dark');
-  }
+    [darkToggle, motionToggle, fontSelect].forEach(el => {
+      if (el) el.disabled = false;
+      const star = el?.closest('label')?.querySelector('.system-star');
+      if (star) star.remove();
+    });
 
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    lockControl(motionToggle, 'motion');
-    if (motionTooltip) motionTooltip.hidden = false;
-  }
+    localStorage.removeItem('userPreferences');
+    savedPrefs = {};
 
-  if (window.matchMedia('(prefers-contrast: more)').matches) {
-    if (fontSelect) {
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      lockControl(darkToggle, 'dark');
+    }
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      lockControl(motionToggle, 'motion');
+    }
+
+    if (window.matchMedia('(prefers-contrast: more)').matches) {
       fontSelect.value = 'large';
       fontSelect.disabled = true;
       systemLocked.font = true;
       systemPrefCount++;
       document.documentElement.setAttribute('data-font-size', 'large');
     }
+
+    const userHadMotionPref = typeof savedPrefs.motion === 'boolean';
+    if (isSmallScreen && !systemLocked.motion && !userHadMotionPref) {
+      lockControl(motionToggle, 'motion');
+      document.documentElement.classList.add('auto-reduce-motion');
+      document.documentElement.setAttribute('data-motion-level', 'none');
+    }
   }
 
-  if (isSmallScreen && !systemLocked.motion && !userHasMotionPref) {
-    lockControl(motionToggle, 'motion');
-    document.documentElement.classList.add('auto-reduce-motion');
-    document.documentElement.setAttribute('data-motion-level', 'none');
-    if (motionTooltip) motionTooltip.hidden = false;
+  function restoreUserPreferences() {
+    if (darkToggle && !systemLocked.dark && typeof savedPrefs.dark === 'boolean') {
+      darkToggle.checked = savedPrefs.dark;
+      document.documentElement.classList.toggle('dark-mode', savedPrefs.dark);
+    }
+    if (motionToggle && !systemLocked.motion && typeof savedPrefs.motion === 'boolean') {
+      motionToggle.checked = savedPrefs.motion;
+      document.documentElement.classList.toggle('reduced-motion', savedPrefs.motion);
+    }
+    if (fontSelect && !systemLocked.font && savedPrefs.font) {
+      fontSelect.value = savedPrefs.font;
+      document.documentElement.setAttribute('data-font-size', savedPrefs.font);
+    }
   }
 
-  if (systemPrefCount > 0) summaryMessage.hidden = false;
-
-  // Restore saved preferences
-  if (darkToggle && !systemLocked.dark && typeof savedPrefs.dark === 'boolean') {
-    darkToggle.checked = savedPrefs.dark;
-  }
-  if (motionToggle && !systemLocked.motion && typeof savedPrefs.motion === 'boolean') {
-    motionToggle.checked = savedPrefs.motion;
-  }
-  if (fontSelect && !systemLocked.font && savedPrefs.font) {
-    fontSelect.value = savedPrefs.font;
-    document.documentElement.setAttribute('data-font-size', savedPrefs.font);
-  }
-
-  // ✅ MODAL OPEN/CLOSE HELPERS
   function openModal() {
-    modal?.classList.add('is-open');
+    refreshSystemSettings();
+    restoreUserPreferences();
+    modal.classList.add('is-open');
     document.body.classList.add('modal-open');
     trapFocus(modal);
   }
 
   function closeModal() {
-    modal?.classList.remove('is-open');
+    modal.classList.remove('is-open');
     document.body.classList.remove('modal-open');
   }
 
-  // 💾 Save preferences and close modal
   saveBtn?.addEventListener('click', () => {
     const prefs = {};
-
     if (darkToggle && !systemLocked.dark) {
       prefs.dark = darkToggle.checked;
+      document.documentElement.classList.toggle('dark-mode', prefs.dark);
     }
     if (motionToggle && !systemLocked.motion) {
       prefs.motion = motionToggle.checked;
+      document.documentElement.classList.toggle('reduced-motion', prefs.motion);
     }
     if (fontSelect && !systemLocked.font) {
       prefs.font = fontSelect.value;
       document.documentElement.setAttribute('data-font-size', prefs.font);
     }
-
+    savedPrefs = prefs;
     localStorage.setItem('userPreferences', JSON.stringify(prefs));
-    closeModal(); // ✅
+    closeModal();
   });
 
-  // 🔄 Reset preferences and close modal
   resetBtn?.addEventListener('click', () => {
     localStorage.removeItem('userPreferences');
-
+    savedPrefs = {};
     if (darkToggle && !systemLocked.dark) {
       darkToggle.checked = false;
+      document.documentElement.classList.remove('dark-mode');
     }
     if (motionToggle && !systemLocked.motion) {
       motionToggle.checked = false;
+      document.documentElement.classList.remove('reduced-motion');
     }
     if (fontSelect && !systemLocked.font) {
       fontSelect.value = 'medium';
       document.documentElement.setAttribute('data-font-size', 'medium');
     }
-
-    closeModal(); // ✅
+    closeModal();
   });
 
-  // 📂 Open modal
-  settingsBtn?.addEventListener('click', (e) => {
+  settingsBtn?.addEventListener('click', e => {
     e.preventDefault();
-    openModal(); // ✅
+    openModal();
   });
 
-  // ❌ Close modal
-  closeBtn?.addEventListener('click', closeModal); // ✅
-  overlay?.addEventListener('click', closeModal);  // ✅ overlay click-to-close
+  closeBtn?.addEventListener('click', closeModal);
+  overlay?.addEventListener('click', closeModal);
 
-  // ⌨️ Escape key closes modal
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeModal(); // ✅
-    }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
   });
 
-  // 🖱 Real-time font-size changes
   fontSelect?.addEventListener('change', () => {
     const selected = fontSelect.value;
     if (!systemLocked.font) {
@@ -154,7 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 🔒 Trap focus inside modal
   function trapFocus(container) {
     const focusable = container.querySelectorAll(
       'button, input, select, a[href], [tabindex]:not([tabindex="-1"])'
@@ -163,15 +162,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const last = focusable[focusable.length - 1];
     first?.focus();
 
-    container.addEventListener('keydown', (e) => {
+    container.addEventListener('keydown', e => {
       if (e.key !== 'Tab') return;
       if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
+        e.preventDefault(); last.focus();
       } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
+        e.preventDefault(); first.focus();
       }
     });
   }
+
+  // 🌍 Listen for changes from other tabs
+  window.addEventListener('storage', event => {
+    if (event.key === 'userPreferences') {
+      savedPrefs = JSON.parse(event.newValue || '{}');
+
+      if (!systemLocked.dark && typeof savedPrefs.dark === 'boolean') {
+        darkToggle.checked = savedPrefs.dark;
+        document.documentElement.classList.toggle('dark-mode', savedPrefs.dark);
+      }
+
+      if (!systemLocked.motion && typeof savedPrefs.motion === 'boolean') {
+        motionToggle.checked = savedPrefs.motion;
+        document.documentElement.classList.toggle('reduced-motion', savedPrefs.motion);
+      }
+
+      if (!systemLocked.font && savedPrefs.font) {
+        fontSelect.value = savedPrefs.font;
+        document.documentElement.setAttribute('data-font-size', savedPrefs.font);
+      }
+
+      // ✅ Update modal controls if open
+      if (modal.classList.contains('is-open')) {
+        restoreUserPreferences();
+      }
+    }
+  });
 });
+

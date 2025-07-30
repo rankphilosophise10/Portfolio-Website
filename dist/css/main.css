@@ -291,7 +291,7 @@ p {
   font-weight: bold;
   color: white;
   text-align: center;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
 .modal__body {
@@ -306,11 +306,54 @@ p {
   font-weight: 500;
   gap: 1rem;
 }
+.modal__body label .label-text {
+  display: flex;
+  align-items: center;
+}
+.modal__body label .label-text .system-star {
+  color: red;
+  font-weight: bold;
+  margin-right: 0.25rem;
+}
+.modal__body label .label-text .system-star::after {
+  content: "Setting has been automatically applied based on your system's preference and cannot be overridden here.";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  color: #333;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #ccc;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+  z-index: 10000;
+}
+.modal__body label .label-text:hover .system-star::after {
+  opacity: 1;
+}
 .modal__body input[type=checkbox],
 .modal__body select {
   order: 1;
   margin: 0;
   width: auto;
+}
+.modal__body input[type=checkbox]:disabled,
+.modal__body select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.modal__body .visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
 }
 
 .modal__footer {
@@ -323,11 +366,6 @@ p {
 .motion-warning {
   color: red;
   font-weight: bold;
-}
-
-.locked {
-  opacity: 0.6;
-  pointer-events: none;
 }
 
 .system-preference-message {
@@ -362,6 +400,19 @@ body.modal-open {
 body.modal-open #main {
   filter: blur(4px) brightness(1.1);
   pointer-events: none;
+}
+
+#font-size-select {
+  padding: 0.5rem 0.75rem;
+  background-color: #f2f2f2;
+  color: #333;
+  border: 1px solid #999;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
 }
 
 .button {
