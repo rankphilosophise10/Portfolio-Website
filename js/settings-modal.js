@@ -3,24 +3,80 @@ document.addEventListener('DOMContentLoaded', () => {
   const overlay = document.getElementById('modal-overlay');
   const settingsBtn = document.getElementById('settings-btn');
   const closeBtn = document.getElementById('close-modal');
-  const saveBtn = document.getElementById('save-settings');
   const resetBtn = document.getElementById('reset-settings');
 
   const darkToggle = document.getElementById('dark-mode-toggle');
   const motionToggle = document.getElementById('reduced-motion-toggle');
   const fontSelect = document.getElementById('font-size-select');
 
-  let systemPrefCount = 0;
-  const systemLocked = { dark: false, motion: false, font: false };
-  let savedPrefs = JSON.parse(localStorage.getItem('userPreferences') || '{}');
   const isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
+  let systemLocked = { dark: false, motion: false, font: false };
+  let savedPrefs = JSON.parse(localStorage.getItem('userPreferences') || '{}');
+
+  applyInitialPreferences();
+
+  // 🛡️ Utility: lock control if system preference is active
+  function maybeLockControl(control, key, systemPrefActive) {
+    if (!control || !systemPrefActive) return;
+    lockControl(control, key);
+  }
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    const isDark = e.matches;
+    document.documentElement.classList.toggle('dark-mode', isDark);
+
+    maybeLockControl(darkToggle, 'dark', isDark);
+
+    if (!savedPrefs.dark) {
+      savedPrefs.dark = isDark;
+      localStorage.setItem('userPreferences', JSON.stringify(savedPrefs));
+    }
+
+    if (modal.classList.contains('is-open') && darkToggle && !systemLocked.dark) {
+      darkToggle.checked = isDark;
+    }
+  });
+
+  window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', e => {
+    const isReduced = e.matches;
+    document.documentElement.classList.toggle('reduced-motion', isReduced);
+
+    maybeLockControl(motionToggle, 'motion', isReduced);
+
+    if (!savedPrefs.motion) {
+      savedPrefs.motion = isReduced;
+      localStorage.setItem('userPreferences', JSON.stringify(savedPrefs));
+    }
+
+    if (modal.classList.contains('is-open') && motionToggle && !systemLocked.motion) {
+      motionToggle.checked = isReduced;
+    }
+  });
+
+  function applyInitialPreferences() {
+    savedPrefs = JSON.parse(localStorage.getItem('userPreferences') || '{}');
+
+    if (typeof savedPrefs.dark === 'boolean') {
+      document.documentElement.classList.toggle('dark-mode', savedPrefs.dark);
+      if (darkToggle && !systemLocked.dark) darkToggle.checked = savedPrefs.dark;
+    }
+
+    if (typeof savedPrefs.motion === 'boolean') {
+      document.documentElement.classList.toggle('reduced-motion', savedPrefs.motion);
+      if (motionToggle && !systemLocked.motion) motionToggle.checked = savedPrefs.motion;
+    }
+
+    if (savedPrefs.font) {
+      document.documentElement.setAttribute('data-font-size', savedPrefs.font);
+      if (fontSelect && !systemLocked.font) fontSelect.value = savedPrefs.font;
+    }
+  }
 
   function lockControl(control, key) {
     if (!control) return;
     control.checked = true;
     control.disabled = true;
     systemLocked[key] = true;
-    systemPrefCount++;
 
     const labelText = control.closest('label')?.querySelector('.label-text');
     if (labelText && !labelText.querySelector('.system-star')) {
@@ -32,33 +88,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function refreshSystemSettings() {
-    systemPrefCount = 0;
-    Object.keys(systemLocked).forEach(key => systemLocked[key] = false);
+    systemLocked = { dark: false, motion: false, font: false };
 
     [darkToggle, motionToggle, fontSelect].forEach(el => {
       if (el) el.disabled = false;
-      const star = el?.closest('label')?.querySelector('.system-star');
-      if (star) star.remove();
+      el?.closest('label')?.querySelector('.system-star')?.remove();
     });
 
-    localStorage.removeItem('userPreferences');
-    savedPrefs = {};
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const prefersMotionReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prefersContrastMore = window.matchMedia('(prefers-contrast: more)').matches;
 
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      lockControl(darkToggle, 'dark');
-    }
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      lockControl(motionToggle, 'motion');
-    }
-
-    if (window.matchMedia('(prefers-contrast: more)').matches) {
-      fontSelect.value = 'large';
-      fontSelect.disabled = true;
-      systemLocked.font = true;
-      systemPrefCount++;
-      document.documentElement.setAttribute('data-font-size', 'large');
-    }
+    maybeLockControl(darkToggle, 'dark', prefersDark);
+    maybeLockControl(motionToggle, 'motion', prefersMotionReduce);
+    maybeLockControl(fontSelect, 'font', prefersContrastMore);
 
     const userHadMotionPref = typeof savedPrefs.motion === 'boolean';
     if (isSmallScreen && !systemLocked.motion && !userHadMotionPref) {
@@ -71,15 +114,14 @@ document.addEventListener('DOMContentLoaded', () => {
   function restoreUserPreferences() {
     if (darkToggle && !systemLocked.dark && typeof savedPrefs.dark === 'boolean') {
       darkToggle.checked = savedPrefs.dark;
-      document.documentElement.classList.toggle('dark-mode', savedPrefs.dark);
     }
+
     if (motionToggle && !systemLocked.motion && typeof savedPrefs.motion === 'boolean') {
       motionToggle.checked = savedPrefs.motion;
-      document.documentElement.classList.toggle('reduced-motion', savedPrefs.motion);
     }
+
     if (fontSelect && !systemLocked.font && savedPrefs.font) {
       fontSelect.value = savedPrefs.font;
-      document.documentElement.setAttribute('data-font-size', savedPrefs.font);
     }
   }
 
@@ -96,40 +138,25 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.remove('modal-open');
   }
 
-  saveBtn?.addEventListener('click', () => {
-    const prefs = {};
-    if (darkToggle && !systemLocked.dark) {
-      prefs.dark = darkToggle.checked;
-      document.documentElement.classList.toggle('dark-mode', prefs.dark);
-    }
-    if (motionToggle && !systemLocked.motion) {
-      prefs.motion = motionToggle.checked;
-      document.documentElement.classList.toggle('reduced-motion', prefs.motion);
-    }
-    if (fontSelect && !systemLocked.font) {
-      prefs.font = fontSelect.value;
-      document.documentElement.setAttribute('data-font-size', prefs.font);
-    }
-    savedPrefs = prefs;
-    localStorage.setItem('userPreferences', JSON.stringify(prefs));
-    closeModal();
-  });
-
   resetBtn?.addEventListener('click', () => {
     localStorage.removeItem('userPreferences');
     savedPrefs = {};
+
     if (darkToggle && !systemLocked.dark) {
       darkToggle.checked = false;
       document.documentElement.classList.remove('dark-mode');
     }
+
     if (motionToggle && !systemLocked.motion) {
       motionToggle.checked = false;
       document.documentElement.classList.remove('reduced-motion');
     }
+
     if (fontSelect && !systemLocked.font) {
       fontSelect.value = 'medium';
       document.documentElement.setAttribute('data-font-size', 'medium');
     }
+
     closeModal();
   });
 
@@ -143,6 +170,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeModal();
+  });
+
+  darkToggle?.addEventListener('change', () => {
+    if (!systemLocked.dark) {
+      const value = darkToggle.checked;
+      document.documentElement.classList.toggle('dark-mode', value);
+      savedPrefs.dark = value;
+      localStorage.setItem('userPreferences', JSON.stringify(savedPrefs));
+    }
+  });
+
+  motionToggle?.addEventListener('change', () => {
+    if (!systemLocked.motion) {
+      const value = motionToggle.checked;
+      document.documentElement.classList.toggle('reduced-motion', value);
+      savedPrefs.motion = value;
+      localStorage.setItem('userPreferences', JSON.stringify(savedPrefs));
+    }
   });
 
   fontSelect?.addEventListener('change', () => {
@@ -172,7 +217,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 🌍 Listen for changes from other tabs
   window.addEventListener('storage', event => {
     if (event.key === 'userPreferences') {
       savedPrefs = JSON.parse(event.newValue || '{}');
@@ -192,11 +236,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.setAttribute('data-font-size', savedPrefs.font);
       }
 
-      // ✅ Update modal controls if open
       if (modal.classList.contains('is-open')) {
         restoreUserPreferences();
       }
     }
   });
 });
-
