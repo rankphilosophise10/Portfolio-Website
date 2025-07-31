@@ -10,6 +10,9 @@
   --color-input-bg: #ffffff; //this is the background of the font size selector box located in the settings modal.
   --color-warning-text: #ff0000; // this is for the * for the system star in the settings modal.
 
+  //project cards
+  --color-text-project-card: #ffffff; // text color for project cards
+
     // Button colors light mode
   --color-primary-button-bg: #1b8afa;
   --color-secondary-button-bg: #bbbaba;
@@ -37,6 +40,9 @@ html.dark-mode {
   --color-accent: #005a9e;
   --color-button-text: #eeeeee;
   --color-input-bg: #818181; //this is the background of the font size selector box located in the settings modal.
+
+  // project cards
+  --color-text-project-card: #e0e0e0l;
 
    // Button colors light mode
   --color-primary-button-bg: #005a9e;

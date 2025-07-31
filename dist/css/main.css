@@ -9,6 +9,7 @@
   --color-footer: #003366;
   --color-input-bg: #ffffff;
   --color-warning-text: #ff0000;
+  --color-text-project-card: #ffffff;
   --color-primary-button-bg: #1b8afa;
   --color-secondary-button-bg: #bbbaba;
   --color-save-button-bg: #1b8afa;
@@ -33,6 +34,7 @@ html.dark-mode {
   --color-accent: #005a9e;
   --color-button-text: #eeeeee;
   --color-input-bg: #818181;
+  --color-text-project-card: #e0e0e0l;
   --color-primary-button-bg: #005a9e;
   --color-secondary-button-bg: #555555;
   --color-save-button-bg: #005a9e;
@@ -188,15 +190,6 @@ p {
   padding: 1rem;
 }
 
-.bio-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem;
-  background-color: #f9f9f9;
-  justify-content: center;
-}
-
 .bio {
   display: flex;
   flex-wrap: wrap;
@@ -250,11 +243,13 @@ p {
 }
 
 .project-card {
-  background-color: white;
-  padding: 1rem;
+  flex: 1 1 280px;
   max-width: 300px;
+  background-color: var(--color-footer);
+  padding: 1rem;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  color: var(--color-text-project-card);
 }
 .project-card__img {
   width: 100%;
@@ -267,7 +262,6 @@ p {
 }
 .project-card__desc {
   font-size: 0.9rem;
-  color: #555;
 }
 
 .modal--settings {
