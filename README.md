@@ -7,3 +7,7 @@ This website currently responds to media inquiries for users who opted for reduc
 # Upcoming Features
 * Manual selection for Font Size from the Settings modal.
 * Manual selection for Prefers Reduced Motion
+
+# Release Notes
+20250828 - 
+    1. Updated ReadMe Document
